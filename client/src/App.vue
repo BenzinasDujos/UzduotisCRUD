@@ -1,7 +1,7 @@
 <template>
 
   <div class ="row">
-      <div class="cell-lg-6"></div>
+      <div class="cell-lg-6 p-10"></div>
           <h1 class="center-text">Form</h1>
       <div class="form-group">
           <label>Title</label>
@@ -12,7 +12,7 @@
           <input v-model="link" type="text" placeholder="Enter Link"/>
       </div>
       <div class="form-group">
-          <button class="button success">Submit data</button>
+          <button @click="post" class="button success">Submit</button>
     </div>
       <div class="cell-lg-6"></div>
       <table class="table">
@@ -26,15 +26,15 @@
     </tr>
     </thead>
     <tbody>
-    <tr>
-        <td>1</td>
-        <td>Bill</td>
-        <td>Gates</td>
+    <tr v-for="movie in movies" :key="movie.id">
+        <td>{{movie.id}}</td>
+        <td>{{movie.title}}</td>
+        <td>{{movie.link}}</td>
         <td>
-          <button @click="getOne()" class="button success outline">Edit</button>
+          <button @click="getOne(movie.id)" class="button success outline">Edit</button>
         </td>
         <td>
-          <button @click="deleteOne()" class="button success outline">Delete</button>
+          <button @click="deleteOne(movie.id)" class="button success outline">Delete</button>
         </td>
     </tr>
 
@@ -61,13 +61,13 @@ export default {
   },
   methods:{
     getAll(){
-      axios.get(`http://127.0.0.1/api`)
+      axios.get(`http://127.0.0.1:8000/api`)
       .then((res)=>
       this.movies = res.data
       )
     },
     getOne(id){
-      axios.get(`http://127.0.0.1/api/${id}`)
+      axios.get(`http://127.0.0.1:8000/api/${id}`)
       .then((res)=>{
         this.movies = res.data.id;
         this.title = res.data.title;
@@ -77,21 +77,21 @@ export default {
       )
     },
       deleteOne(id){
-      axios.delete(`http://127.0.0.1/api/${id}`)
+      axios.delete(`http://127.0.0.1:8000/api/${id}`)
       .then((res)=>{
         this.getAll();
       })
       }
       ,
       editOne(id){
-      axios.put(`http://127.0.0.1/api/${id}`, {title:this.title, link:this.link})
+      axios.put(`http://127.0.0.1:8000/api/${id}`, {title:this.title, link:this.link})
       .then((res)=>{
         this.getAll();
       })
       }
       ,
       post(){
-      axios.post(`http://127.0.0.1/api`, {title:this.title, link:this.link})
+      axios.post(`http://127.0.0.1:8000/api`, {title:this.title, link:this.link})
       .then((res)=>{
         this.getAll();
       })
